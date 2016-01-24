@@ -44,7 +44,7 @@
     window.open('', 'data').document.body['innerText'] = string;
   }
 
-  var blacklist = [/^Act -.*/, /^Transaction.*/, /Will Registered/];
+  var blacklist = [/^Act -.*/, /^Transaction.*/, /Will Registered/, /^H.C.S. -.*/, /^Notice -.*/, /Rights - Sale/, /Co ownership Declaration/];
   var datesArr = dates(rowTextAtColumn(3));
   var docTypesArr = rowTextAtColumn(8);
   var allText = '';
