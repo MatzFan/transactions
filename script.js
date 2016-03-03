@@ -54,7 +54,7 @@
       count += 1;
       var nameS = allContracts[i].nameSeq;
       var docS = allContracts[i].docSeq;
-      var url = 'detailstab.aspx?tab=details&nameSeq=' + nameS + '&docSeq=' + docS;
+      var url = 'http://pride/pride/Search/detailstab.aspx?tab=details&nameSeq=' + nameS + '&docSeq=' + docS;
       allText += ('|' + get(url));
     }
   };
