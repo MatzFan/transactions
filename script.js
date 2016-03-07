@@ -33,10 +33,12 @@
     return false;
   }
 
-  function get(url) {
+  function post(nameSeq, docSeq) {
+    params = 'tab=details&nameSeq=' + nameSeq + '&docSeq=' + docSeq
     xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('GET', url ,false);
-    xmlhttp.send();
+    xmlhttp.open('POST', 'pride/Search/PrintDetails.aspx' ,false);
+    xmlhttp.setRequestHeader('Referer', 'http://pride/pride/Search/detailstab.aspx?tab=details&nameSeq=' + nameSeq + '&docSeq=' + docSeq);
+    xmlhttp.send(params);
     return xmlhttp.responseText;
   }
 
@@ -52,10 +54,9 @@
   for(var i = 0; i < allContracts.length; i++) {
     if(datesArr[i].getDay() == 5 && !matches(blacklist, docTypesArr[i])) {
       count += 1;
-      var nameS = allContracts[i].nameSeq;
-      var docS = allContracts[i].docSeq;
-      var url = 'http://pride/pride/Search/detailstab.aspx?tab=details&nameSeq=' + nameS + '&docSeq=' + docS;
-      allText += ('|' + get(url));
+      var nameSeq = allContracts[i].nameSeq;
+      var docSeq = allContracts[i].docSeq;
+      allText += ('|' + post(nameSeq, docSeq));
     }
   };
   alert(count);
