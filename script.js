@@ -62,7 +62,7 @@
   var docTypesArr = rowTextAtColumn(8);
   var allText = '';
   var count = 0;
-  for(var i = 0; i < 7; i++) {
+  for(var i = 0; i < allContracts.length; i++) {
     if(datesArr[i].getDay() == 5 && !matches(blacklist, docTypesArr[i])) {
       count += 1;
       var nameSeq = allContracts[i].nameSeq;
