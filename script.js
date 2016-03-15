@@ -1,5 +1,3 @@
-// href="javascript:(function () { alert(allContracts.length) })();"
-
 (function () {
 
   function toDate(str) {
@@ -33,13 +31,26 @@
     return false;
   }
 
-  function post(nameSeq, docSeq) {
-    params = 'tab=details&nameSeq=' + nameSeq + '&docSeq=' + docSeq
+  function doGet(tab, nameSeq, docSeq) {
     xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'pride/Search/PrintDetails.aspx' ,false);
-    xmlhttp.setRequestHeader('Referer', 'http://pride/pride/Search/detailstab.aspx?tab=details&nameSeq=' + nameSeq + '&docSeq=' + docSeq);
-    xmlhttp.send(params);
+    xmlhttp.open('GET', 'http://pride/pride/Search/detailstab.aspx?tab=' + tab + '&nameSeq=' + nameSeq + '&docSeq=' + docSeq, false);
+    xmlhttp.send();
     return xmlhttp.responseText;
+  }
+
+  function parsePartiesProperties(text) {
+    var data = text.match(/(<td (.*)<\/td>|<a href=(.*)<\/a>)/gmi).slice(19).map(function(string) {
+      return string.match(/>(.*)</)[0];
+    });
+    return data.join('\n');
+  }
+
+  function parseDetails(text) {
+    var data = text.match(/<td (.*)<\/td>$/gmi).slice(14).map(function(string) {
+      trunc = string.match(/(.*)<\/span><\/td>/)[0].substring(0, string.length -12);
+      return trunc.substring(trunc.lastIndexOf('>')) + '<';
+    });
+    return data.join('\n');
   }
 
   function pasteTextInNewWindow(string) {
@@ -51,12 +62,15 @@
   var docTypesArr = rowTextAtColumn(8);
   var allText = '';
   var count = 0;
-  for(var i = 0; i < allContracts.length; i++) {
+  for(var i = 0; i < 7; i++) {
     if(datesArr[i].getDay() == 5 && !matches(blacklist, docTypesArr[i])) {
       count += 1;
       var nameSeq = allContracts[i].nameSeq;
       var docSeq = allContracts[i].docSeq;
-      allText += ('|' + post(nameSeq, docSeq));
+      var details = parseDetails(doGet('details', nameSeq, docSeq));
+      var parties = parsePartiesProperties(doGet('parties', nameSeq, docSeq));
+      var properties = parsePartiesProperties(doGet('properties', nameSeq, docSeq));
+      allText += '<DET>\n' + details + '\n<PAR>\n' + parties + '\n<PRO>\n' + properties + '\n|\n';
     }
   };
   alert(count);
